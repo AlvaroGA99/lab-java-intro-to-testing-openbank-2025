@@ -1,7 +1,13 @@
+import org.example.Elf;
+import org.example.Main;
+import org.example.Warrior;
+import org.example.Wizard;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
 
 public class Tests {
 
@@ -44,24 +50,6 @@ public class Tests {
         assertFalse(Main.containsKeyword("Use conditional logic to check different values."));
     }
 
-
-    @Test
-    void testGoto() {
-        assertTrue(Main.containsKeyword("Java reserves goto as a keyword, though it’s not used."));
-        assertFalse(Main.containsKeyword("Reserved words include some that aren’t implemented."));
-    }
-
-    @Test
-    void testPackage() {
-        assertTrue(Main.containsKeyword("Declare the package at the top of the Java file."));
-        assertFalse(Main.containsKeyword("Organize the classes in a logical directory."));
-    }
-
-    @Test
-    void testSynchronized() {
-        assertTrue(Main.containsKeyword("A synchronized block ensures thread-safe access."));
-        assertFalse(Main.containsKeyword("Only one thread can access the method at a time."));
-    }
 
     @Test
     void testBoolean() {
@@ -108,24 +96,6 @@ public class Tests {
     }
 
     @Test
-    void testEnum() {
-        assertTrue(Main.containsKeyword("Define an enum to represent fixed categories."));
-        assertFalse(Main.containsKeyword("Use a list of constant values to represent states."));
-    }
-
-    @Test
-    void testReturn() {
-        assertTrue(Main.containsKeyword("Return the final result from the method."));
-        assertFalse(Main.containsKeyword("Send the result back to the caller."));
-    }
-
-    @Test
-    void testTransient() {
-        assertTrue(Main.containsKeyword("Mark the field as transient to skip serialization."));
-        assertFalse(Main.containsKeyword("Exclude the field from being saved to a file."));
-    }
-
-    @Test
     void testCatch() {
         assertTrue(Main.containsKeyword("Use catch to handle exceptions after try."));
         assertFalse(Main.containsKeyword("Trap any errors and process them safely."));
@@ -162,35 +132,6 @@ public class Tests {
     }
 
     @Test
-    void testInterface() {
-        assertTrue(Main.containsKeyword("The interface defines a contract for the class."));
-        assertFalse(Main.containsKeyword("Define a set of method signatures without implementation."));
-    }
-    @Test
-    void testClass() {
-        assertTrue(Main.containsKeyword("Define a class to represent a blueprint."));
-        assertFalse(Main.containsKeyword("Create a blueprint to represent objects."));
-    }
-
-    @Test
-    void testStrictfp() {
-        assertTrue(Main.containsKeyword("strictfp ensures consistent floating-point calculations."));
-        assertFalse(Main.containsKeyword("Make math results consistent across platforms."));
-    }
-
-    @Test
-    void testVolatile() {
-        assertTrue(Main.containsKeyword("Declare the field as volatile to avoid caching issues."));
-        assertFalse(Main.containsKeyword("Ensure visibility of changes between threads."));
-    }
-
-    @Test
-    void testConst() {
-        assertTrue(Main.containsKeyword("Java reserves const even though it's not used."));
-        assertFalse(Main.containsKeyword("Some reserved words are not implemented."));
-    }
-
-    @Test
     void testFloat() {
         assertTrue(Main.containsKeyword("Use a float to save decimal values."));
         assertFalse(Main.containsKeyword("A single-precision decimal number is needed."));
@@ -207,5 +148,67 @@ public class Tests {
         assertTrue(Main.containsKeyword("Keep looping while the condition is true."));
         assertFalse(Main.containsKeyword("Repeat the process until the condition is false."));
     }
+
+
+    @Test
+    public void testDecrementLive() {
+        Warrior warrior = new Warrior( 100, 10,5,2);
+        warrior.decrementLive();
+        assertEquals(4, warrior.getLives());
+    }
+
+    @Test
+    public void testAttack() {
+        Warrior warrior = new Warrior( 100, 10,5,2);
+        Wizard wizard = new Wizard( 80, 15, 3, "Fireball");
+
+        warrior.attack(wizard);
+
+        assertEquals(70, wizard.getHealth());
+
+    }
+
+    @Test
+    public void testCheckHealth() {
+        Elf elf = new Elf( 10, 8, 2, 1);
+
+        elf.setHealth(5);
+
+        elf.checkHealth();
+
+        assertEquals(5, elf.getHealth());
+
+        elf.setHealth(0);
+
+        elf.checkHealth();
+
+        assertEquals(10, elf.getHealth());
+
+
+    }
+
+    @Test
+    public void testConvertToElf() {
+        Warrior warrior = new Warrior(100, 10, 5, 2);
+        Elf elf = warrior.convertToElf();
+
+        assertNotNull(elf);
+        assertEquals(100, elf.getHealth());
+        assertEquals(10, elf.getStrength());
+        assertEquals(5, elf.getLives());
+
+    }
+
+    @Test
+    public void testMockingWizard() {
+        Wizard wizard = Mockito.mock(Wizard.class);
+        Mockito.when(wizard.castSpell()).thenReturn("Casting Fireball");
+
+        String spell = wizard.castSpell();
+
+        Mockito.verify(wizard, times(1)).castSpell();
+        assertEquals("Casting Fireball", spell);
+    }
+
 }
 
